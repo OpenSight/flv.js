@@ -52,6 +52,7 @@ class FLVDemuxer {
 
         this._onError = null;
         this._onMediaInfo = null;
+        this._onMetaDataArrived = null;
         this._onTrackMetadata = null;
         this._onDataAvailable = null;
 
@@ -122,6 +123,7 @@ class FLVDemuxer {
 
         this._onError = null;
         this._onMediaInfo = null;
+        this._onMetaDataArrived = null;
         this._onTrackMetadata = null;
         this._onDataAvailable = null;
     }
@@ -173,6 +175,14 @@ class FLVDemuxer {
 
     set onMediaInfo(callback) {
         this._onMediaInfo = callback;
+    }
+
+    get onMetaDataArrived() {
+        return this._onMetaDataArrived;
+    }
+
+    set onMetaDataArrived(callback) {
+        this._onMetaDataArrived = callback;
     }
 
     // prototype: function(type: number, info: string): void
@@ -358,6 +368,10 @@ class FLVDemuxer {
             }
             this._metadata = scriptData;
             let onMetaData = this._metadata.onMetaData;
+
+            if (this._onMetaDataArrived) {
+                this._onMetaDataArrived(Object.assign({}, onMetaData));
+            }
 
             if (typeof onMetaData.hasAudio === 'boolean') {  // hasAudio
                 if (this._hasAudioFlagOverrided === false) {
